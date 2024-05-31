@@ -1,18 +1,16 @@
 import matplotlib.pyplot as plt
 import csv
 
-def plot_sizes(datasets, labels, ordering, fname='out.png', title='', x_title='', y_title='', yticks=None):
+def plot_sizes(datasets, labels, ordering, fname='out.pdf', title='', x_title='', y_title='', yticks=None):
     fix,ax = plt.subplots()
 
     dataset_values = [[dataset[matrix] for matrix in ordering] for dataset in datasets]
 
-    print(dataset_values[1])
-
-    markers = ['s', '.', '^', 'o']
+    markers = ['s', '.', '^', 'o', '+']
     for marker,dataset,label in zip(markers,dataset_values, labels):
         domain = range(len(dataset))
         y_points = dataset
-        ax.semilogy(domain, y_points, label=label, marker=marker, markerfacecolor='white')
+        ax.semilogy(domain, y_points, label=label)
 
     ax.minorticks_off()
 
@@ -33,8 +31,16 @@ def read_dataset(fname):
     data = {}
     with open(fname, mode='r') as file:
         csvFile = csv.DictReader(file)
-        for lines in csvFile:
-            data[lines['dataset']] = int(lines['size_bytes'])
+        for line in csvFile:
+            data[line['dataset']] = int(line['size_bytes'])
+    return data
+
+def read_nnz(fname):
+    data = {}
+    with open(fname, mode='r') as file:
+        csvFile = csv.DictReader(file)
+        for line in csvFile:
+            data[line['dataset']] = int(line['nnz'])
     return data
 
 def pretty_print_size(size):
@@ -59,16 +65,41 @@ def pretty_print_size(size):
     return '%s %s' % (size, label)
 
 binsparse_coo_gzip9_aux = read_dataset('binsparse_coo_gzip9_aux.csv')
+
+binsparse_coo_noz_noaux = read_dataset('binsparse_coo_noz_noaux.csv')
+binsparse_coo_gzip1_noaux = read_dataset('binsparse_coo_gzip1_noaux.csv')
+binsparse_coo_gzip9_noaux = read_dataset('binsparse_coo_gzip9_noaux.csv')
+
+binsparse_csr_gzip9_aux = read_dataset('binsparse_csr_gzip9_aux.csv')
+
+binsparse_csr_noz_noaux = read_dataset('binsparse_csr_noz_noaux.csv')
+binsparse_csr_gzip1_noaux = read_dataset('binsparse_csr_gzip1_noaux.csv')
+binsparse_csr_gzip9_noaux = read_dataset('binsparse_csr_gzip9_noaux.csv')
+
 mtx_noz_aux = read_dataset('mtx_noz_aux.csv')
 mtx_noz_noaux = read_dataset('mtx_noz_noaux.csv')
 
-ordering = [x[0] for x in sorted(mtx_noz_aux.items(), key=lambda x: x[1], reverse=True)]
+matrix_nnz = read_nnz('matrix_nnzs.csv')
 
-datasets = [mtx_noz_aux, binsparse_coo_gzip9_aux]
-labels = ['mtx_noz_aux', 'binsparse_coo_gzip9_aux']
+cutoff = 0
+
+matrix_nnz = {dataset:nnz for dataset,nnz in matrix_nnz.items() if nnz > cutoff}
+
+print(matrix_nnz)
+
+ordering = [x[0] for x in sorted(matrix_nnz.items(), key=lambda x: x[1], reverse=True)]
+
+datasets = [mtx_noz_noaux, binsparse_coo_noz_noaux, binsparse_coo_gzip1_noaux, binsparse_csr_noz_noaux, binsparse_csr_gzip1_noaux]
+labels = ['mtx_noz_noaux', 'binsparse_coo_noz_noaux', 'binsparse_coo_gzip1_noaux', 'binsparse_csr_noz_noaux', 'binsparse_csr_gzip1_noaux']
+
+# datasets = [mtx_noz_noaux, binsparse_coo_noz_noaux, binsparse_coo_gzip1_noaux, binsparse_coo_gzip9_noaux]
+# labels = ['mtx_noz_noaux', 'binsparse_coo_noz_noaux', 'binsparse_coo_gzip1_noaux', 'binsparse_coo_gzip9_noaux']
 
 ytick_data = [1024 * 2**(i*3) for i in range(10)]
 ytick_labels = [pretty_print_size(size) for size in ytick_data]
+
+ytick_data = ytick_data[3:]
+ytick_labels = ytick_labels[3:]
 
 plot_sizes(datasets, labels, ordering, title='SuiteSparse Matrix Collection', y_title='File Size (Bytes)', x_title='Matrix Index', yticks = (ytick_data,ytick_labels))
 
