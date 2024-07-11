@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import csv
 import re
 
+import numpy as np
+from statistics import geometric_mean
+
 from collections import defaultdict
 
 def plot_sizes(datasets, labels, ordering, fname='out.pdf', title='', x_title='', y_title='', yticks=None, style='scatter'):
@@ -123,3 +126,19 @@ def read_benchmark_data(file_name):
 def read_and_clean_benchmark_data(file_name):
     matrix_data = read_benchmark_data(file_name)
     return {x: sum(matrix_data[x]['runtime']) for x in matrix_data.keys()};
+
+def print_speedups(datasets, labels, ordering, baseline):
+    speedups = {}
+    for label in labels:
+        speedups[label] = []
+
+    for matrix in ordering:
+        for dataset,label in zip(datasets,labels):
+            speedups[label].append(baseline[matrix] / dataset[matrix])
+
+    for label in labels:
+        mean_speedup = geometric_mean(speedups[label])
+        max_speedup = np.max(speedups[label])
+        min_speedup = np.min(speedups[label])
+
+        print('%s has a mean speedup of %.2fx, max speedup of %.2fx, and min speedup of %.2fx\n' % (label, mean_speedup, max_speedup, min_speedup,))
