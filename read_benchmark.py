@@ -2,19 +2,30 @@ import re
 import numpy as np
 import csv
 
+from plotting import *
+
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
-def plot_sizes(datasets, labels, ordering, fname='out.pdf', title='', x_title='', y_title='', yticks=None):
+def plot_sizes(datasets, labels, ordering, fname='out.pdf', title='', x_title='', y_title='', yticks=None, style='scatter'):
     fix,ax = plt.subplots()
 
     dataset_values = [[dataset[matrix] for matrix in ordering] for dataset in datasets]
+
+    ax.set_yscale('log')
 
     markers = ['s', '.', '^', 'o', '+']
     for marker,dataset,label in zip(markers,dataset_values, labels):
         domain = range(len(dataset))
         y_points = dataset
-        ax.semilogy(domain, y_points, label=label)
+
+        if style == 'line':
+            ax.semilogy(domain, y_points, label=label)
+        elif style == 'scatter':
+            ax.scatter(domain, y_points, label=label, s=0.5)
+        else:
+            print('Style must be either line or scatter')
+            assert(False)
 
     ax.minorticks_off()
 
@@ -50,7 +61,7 @@ def read_benchmark_data(file_name):
             if m:
                 data = m.group(1).split(',')
 
-                m2 = re.match('.+/(.+/.+)\.coo\.bsp\.h5', data[0])
+                m2 = re.match('.+/(.+/.+?)\..+', data[0])
                 if m2:
                   matrix = m2.group(1)
 
@@ -59,6 +70,8 @@ def read_benchmark_data(file_name):
 
                   matrix_data[matrix]['runtime'].append(runtime)
                   matrix_data[matrix]['bandwidth'].append(bandwidth_gb)
+                else:
+                    print('%s not matched...' % (data[0]))
 
     return matrix_data
 
@@ -98,9 +111,10 @@ ordering = [x[0] for x in sorted(matrix_nnz.items(), key=lambda x: x[1], reverse
 
 binsparse_coo_gzip1 = read_and_clean_benchmark_data('binsparse_coo_gzip1_read.dat')
 binsparse_coo_noz = read_and_clean_benchmark_data('br_coo_noz.71972.out')
+mtx_coo_noz = read_and_clean_benchmark_data('br_mtx_noz.73384.out')
 
-datasets = [binsparse_coo_gzip1, binsparse_coo_noz]
-labels = ['binsparse_coo_gzip1', 'binsparse_coo_noz']
+datasets = [binsparse_coo_gzip1, binsparse_coo_noz, mtx_coo_noz]
+labels = ['binsparse_coo_gzip1', 'binsparse_coo_noz', 'mtx_coo_noz']
 
 ytick_data = [0.200, 1, 6, 30, 180, 1080]
 ytick_labels = [pretty_print_time(time) for time in ytick_data]
