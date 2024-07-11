@@ -47,3 +47,5 @@ print(ytick_labels)
 for matrix in ordering:
     if binsparse_coo_gzip9_aux[matrix] > mtx_noz_aux[matrix]:
         print('%s: %s' % (matrix, pretty_print_size(binsparse_coo_gzip9_aux[matrix] - mtx_noz_aux[matrix])))
+
+print_speedups(datasets, labels, ordering, mtx_noz_noaux)

@@ -125,7 +125,7 @@ def read_benchmark_data(file_name):
 
 def read_and_clean_benchmark_data(file_name):
     matrix_data = read_benchmark_data(file_name)
-    return {x: sum(matrix_data[x]['runtime']) for x in matrix_data.keys()};
+    return {x: np.mean(matrix_data[x]['runtime']) for x in matrix_data.keys()};
 
 def print_speedups(datasets, labels, ordering, baseline):
     speedups = {}
@@ -142,3 +142,31 @@ def print_speedups(datasets, labels, ordering, baseline):
         min_speedup = np.min(speedups[label])
 
         print('%s has a mean speedup of %.2fx, max speedup of %.2fx, and min speedup of %.2fx\n' % (label, mean_speedup, max_speedup, min_speedup,))
+
+def print_statistics(files, ordering):
+    for file in files:
+        matrix_data = read_benchmark_data(file)
+
+        coefficients_of_variance = []
+        high_cv_matrices = []
+
+        for matrix in ordering:
+            variance = np.var(matrix_data[matrix]['runtime'])
+            mean = np.mean(matrix_data[matrix]['runtime'])
+
+            stdev = np.sqrt(variance)
+
+            cv = stdev / mean
+
+            if cv >= 1:
+              high_cv_matrices.append((matrix, cv))
+
+            coefficients_of_variance.append(cv)
+
+        if len(high_cv_matrices) > 0:
+            print('%s has high variance matrices:' % (file,))
+            for matrix,cv in sorted(high_cv_matrices, key=lambda x: x[1]):
+                print('%s: %.2lf' % (matrix,cv))
+
+        print('%s has average CV of %.2f, min CV of %.2f, max CV of %.2f' % (file, np.mean(coefficients_of_variance), np.min(coefficients_of_variance), np.max(coefficients_of_variance)))
+

@@ -30,9 +30,11 @@ ordering = [x[0] for x in sorted(mtx_coo_noz.items(), key=lambda x: x[1], revers
 datasets = [binsparse_coo_gzip1, binsparse_coo_noz, mtx_coo_noz]
 labels = ['binsparse_coo_gzip1', 'binsparse_coo_noz', 'mtx_coo_noz']
 
-ytick_data = [0.200, 1, 6, 30, 180, 1080]
+ytick_data = [0.006, 0.03, 0.18, 1, 6, 30, 180]
 ytick_labels = [pretty_print_time(time) for time in ytick_data]
 
 plot_sizes(datasets, labels, ordering, title='SuiteSparse Matrix Collection', y_title='Runtime', x_title='Matrix Index', yticks = (ytick_data, ytick_labels))
 
 print_speedups(datasets, labels, ordering, mtx_coo_noz)
+
+print_statistics(['br_mtx_noz.73384.out', 'br_coo_noz.71972.out', 'binsparse_coo_gzip1_read.dat'], ordering)
