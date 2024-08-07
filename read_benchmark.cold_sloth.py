@@ -16,11 +16,11 @@ cutoff = 1000000
 mtx_noz_noaux = read_dataset('mtx_noz_noaux.csv')
 
 # Read times for Coo GZIP1
-mtx_coo_noz = read_and_clean_benchmark_data('sloth/cold/br_mtx_noz.2.out')
-binsparse_coo_noz = read_and_clean_benchmark_data('sloth/cold/br_coo_noz.out')
-binsparse_coo_gzip1 = read_and_clean_benchmark_data('sloth/cold/br_coo_gz1.out')
-binsparse_csr_noz = read_and_clean_benchmark_data('sloth/cold/br_csr_noz.out')
-binsparse_csr_gzip1 = read_and_clean_benchmark_data('sloth/cold/br_csr_gz1.out')
+mtx_coo_noz = read_and_clean_benchmark_data('sloth/cold_read/br_mtx_noz.2.out')
+binsparse_coo_noz = read_and_clean_benchmark_data('sloth/cold_read/br_coo_noz.out')
+binsparse_coo_gzip1 = read_and_clean_benchmark_data('sloth/cold_read/br_coo_gz1.out')
+binsparse_csr_noz = read_and_clean_benchmark_data('sloth/cold_read/br_csr_noz.out')
+binsparse_csr_gzip1 = read_and_clean_benchmark_data('sloth/cold_read/br_csr_gz1.out')
 
 # Order by NNZ
 # ordering = [x[0] for x in sorted(matrix_nnz.items(), key=lambda x: x[1], reverse=True) if matrix_nnz[x[0]] >= cutoff]
@@ -41,4 +41,4 @@ plot_sizes(datasets, labels, ordering, title='Read Times - SuiteSparse Matrix Co
 
 print_speedups(datasets, labels, ordering, mtx_coo_noz)
 
-print_statistics(['sloth/cold/br_coo_gz1.out', 'sloth/cold/br_coo_noz.out', 'sloth/cold/br_csr_gz1.out', 'sloth/cold/br_csr_noz.out', 'sloth/cold/br_mtx_noz.2.out'], ordering)
+print_statistics(['sloth/cold_read/br_coo_gz1.out', 'sloth/cold_read/br_coo_noz.out', 'sloth/cold_read/br_csr_gz1.out', 'sloth/cold_read/br_csr_noz.out', 'sloth/cold_read/br_mtx_noz.2.out'], ordering)
