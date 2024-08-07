@@ -7,7 +7,7 @@ from statistics import geometric_mean
 
 from collections import defaultdict
 
-def plot_sizes(datasets, labels, ordering, fname='out.pdf', title='', x_title='', y_title='', yticks=None, style='scatter'):
+def plot_sizes(datasets, labels, ordering, fname='out.png', title='', x_title='', y_title='', yticks=None, style='scatter'):
     fix,ax = plt.subplots()
 
     dataset_values = [[dataset[matrix] for matrix in ordering] for dataset in datasets]
@@ -40,7 +40,13 @@ def plot_sizes(datasets, labels, ordering, fname='out.pdf', title='', x_title=''
     plt.legend(loc='best')
 
     plt.tight_layout()
-    plt.savefig(fname)
+    import os
+    filename, file_extension = os.path.splitext(fname)
+    if file_extension == '.png':
+        plt.savefig(fname, dpi=400)
+    else:
+        plt.savefig(fname)
+
 
 def read_dataset(fname):
     data = {}

@@ -39,7 +39,7 @@ ytick_labels = [pretty_print_size(size) for size in ytick_data]
 ytick_data = ytick_data[3:]
 ytick_labels = ytick_labels[3:]
 
-plot_sizes(datasets, labels, ordering, title='SuiteSparse Matrix Collection', y_title='File Size (Bytes)', x_title='Matrix Index', yticks = (ytick_data,ytick_labels))
+plot_sizes(datasets, labels, ordering, title='File Size - SuiteSparse Matrix Collection', y_title='File Size (Bytes)', x_title='Matrix Index', yticks = (ytick_data,ytick_labels))
 
 print(ytick_data)
 print(ytick_labels)
