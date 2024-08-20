@@ -7,6 +7,68 @@ from statistics import geometric_mean
 
 from collections import defaultdict
 
+relabel = {}
+relabel['mtx_noz_noaux'] = '.mtx'
+relabel['binsparse_coo_noz_noaux'] = '.coo.bsp'
+relabel['binsparse_coo_gzip1_noaux'] = '.coo.bsp.gz'
+relabel['binsparse_csr_noz_noaux'] = '.csr.bsp'
+relabel['binsparse_csr_gzip1_noaux'] = '.csr.bsp.gz'
+
+def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', title='', x_title='', y_title='', yticks=None, xticks=None, colors=None, style='scatter'):
+    plt.style.use('tableau-colorblind10')
+    fix,ax = plt.subplots()
+
+    dataset_values = [[dataset[matrix] for matrix in ordering] for dataset in datasets]
+
+    domain_values = [matrix_sizes[matrix] for matrix in ordering]
+
+    ax.set_yscale('log')
+    ax.set_xscale('log')
+
+    if colors == None:
+        colors = [None for d in datasets]
+
+    markers = ['s', '.', '^', 'o', '+']
+    for marker,dataset,label,color in zip(markers,dataset_values, labels, colors):
+        domain = domain_values
+        y_points = dataset
+
+        if style == 'line':
+            ax.semilogy(domain, y_points, label=relabel[label], color=color)
+        elif style == 'scatter':
+            ax.scatter(domain, y_points, label=relabel[label], s=2, color=color)
+        else:
+            print('Style must be either line or scatter')
+            assert(False)
+
+    ax.minorticks_off()
+
+
+    if yticks != None:
+        ax.set_yticks(yticks[0])
+        ax.set_yticklabels(yticks[1])
+
+    if xticks != None:
+        ax.set_xticks(xticks[0])
+        ax.set_xticklabels(xticks[1])
+
+    plt.title(title, fontsize=18)
+    plt.xlabel(x_title, fontsize=12)
+    plt.ylabel(y_title, fontsize=12)
+    plt.rcParams.update({'font.size': 12})
+    legend = plt.legend(loc='best')
+
+    for handle in legend.legend_handles:
+        handle._sizes = [20];
+
+    plt.tight_layout()
+    import os
+    filename, file_extension = os.path.splitext(fname)
+    if file_extension == '.png':
+        plt.savefig(fname, dpi=400)
+    else:
+        plt.savefig(fname)
+
 def plot_sizes(datasets, labels, ordering, fname='out.png', title='', x_title='', y_title='', yticks=None, style='scatter'):
     fix,ax = plt.subplots()
 
@@ -83,13 +145,16 @@ def pretty_print_size(size):
     else:
         assert(False)
 
+    if int(size) == size:
+        size = int(size)
+
     return '%s %s' % (size, label)
 
 
-def pretty_print_time(size):
+def pretty_print_time(size, only_seconds=False):
     factor = 1
 
-    if size >= 60:
+    if not only_seconds and size >= 60:
         label = 'm'
         size /= 60
     else:
@@ -102,6 +167,9 @@ def pretty_print_time(size):
 
     if int(size) == size:
         size = int(size)
+
+    if type(size) == float:
+        return '%.1f %s' % (size, label)
 
     return '%s %s' % (size, label)
 
@@ -141,6 +209,8 @@ def print_speedups(datasets, labels, ordering, baseline):
     for matrix in ordering:
         for dataset,label in zip(datasets,labels):
             speedups[label].append(baseline[matrix] / dataset[matrix])
+            if baseline[matrix] < dataset[matrix]:
+                print('%s is slower.' % (matrix))
 
     for label in labels:
         mean_speedup = geometric_mean(speedups[label])
