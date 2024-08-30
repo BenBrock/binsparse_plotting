@@ -15,6 +15,8 @@ binsparse_csr_gzip9_noaux = read_dataset('binsparse_csr_gzip9_noaux.csv')
 mtx_noz_aux = read_dataset('mtx_noz_aux.csv')
 mtx_noz_noaux = read_dataset('mtx_noz_noaux.csv')
 
+fmm_noz = read_dataset('fmm_sizes.csv')
+
 matrix_nnz = read_nnz('matrix_nnzs.csv')
 
 cutoff = 1024*1024
@@ -37,7 +39,9 @@ ytick_labels = [pretty_print_size(x) for x in ytick_data]
 xtick_data = [x * 1024 * 1024 for x in [16, 64, 256, 1024, 4096, 16384, 65536]]
 xtick_labels = [pretty_print_size(x) for x in xtick_data]
 
-plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='File Size - SuiteSparse Matrix Collection', y_title='File Size (Bytes)', x_title='Matrix Market File Size', yticks = (ytick_data,ytick_labels), xticks = (xtick_data, xtick_labels), fname='out.pdf')
+colors = ['C0', 'C1', 'C3', 'C2', 'C4']
+
+plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='File Size - SuiteSparse Matrix Collection', y_title='File Size (Bytes)', x_title='Matrix Market File Size', yticks = (ytick_data,ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.png')
 
 print(ytick_data)
 print(ytick_labels)

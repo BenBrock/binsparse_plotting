@@ -14,6 +14,14 @@ relabel['binsparse_coo_gzip1_noaux'] = '.coo.bsp.gz'
 relabel['binsparse_csr_noz_noaux'] = '.csr.bsp'
 relabel['binsparse_csr_gzip1_noaux'] = '.csr.bsp.gz'
 
+relabel['binsparse_coo_noz'] = '.coo.bsp'
+relabel['binsparse_coo_gzip1'] = '.coo.bsp.gz'
+relabel['binsparse_csr_noz'] = '.csr.bsp'
+relabel['binsparse_csr_gzip1'] = '.csr.bsp.gz'
+
+relabel['fmm_noz'] = '.fmm.mtx'
+
+
 def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', title='', x_title='', y_title='', yticks=None, xticks=None, colors=None, style='scatter'):
     plt.style.use('tableau-colorblind10')
     fix,ax = plt.subplots()
@@ -28,7 +36,8 @@ def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', t
     if colors == None:
         colors = [None for d in datasets]
 
-    markers = ['s', '.', '^', 'o', '+']
+    markers = [None for d in datasets]
+
     for marker,dataset,label,color in zip(markers,dataset_values, labels, colors):
         domain = domain_values
         y_points = dataset
@@ -36,7 +45,7 @@ def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', t
         if style == 'line':
             ax.semilogy(domain, y_points, label=relabel[label], color=color)
         elif style == 'scatter':
-            ax.scatter(domain, y_points, label=relabel[label], s=2, color=color)
+            ax.scatter(domain, y_points, label=relabel[label], s=2, color=color, alpha=0.9)
         else:
             print('Style must be either line or scatter')
             assert(False)
@@ -65,7 +74,7 @@ def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', t
     import os
     filename, file_extension = os.path.splitext(fname)
     if file_extension == '.png':
-        plt.savefig(fname, dpi=400)
+        plt.savefig(fname, dpi=200)
     else:
         plt.savefig(fname)
 
@@ -209,15 +218,15 @@ def print_speedups(datasets, labels, ordering, baseline):
     for matrix in ordering:
         for dataset,label in zip(datasets,labels):
             speedups[label].append(baseline[matrix] / dataset[matrix])
-            if baseline[matrix] < dataset[matrix]:
-                print('%s is slower.' % (matrix))
+            # if baseline[matrix] < dataset[matrix]:
+            #     print('%s is slower.' % (matrix))
 
     for label in labels:
         mean_speedup = geometric_mean(speedups[label])
         max_speedup = np.max(speedups[label])
         min_speedup = np.min(speedups[label])
 
-        print('%s has a mean speedup of %.2fx, max speedup of %.2fx, and min speedup of %.2fx\n' % (label, mean_speedup, max_speedup, min_speedup,))
+        print('%s has a mean speedup of %.3fx, max speedup of %.3fx, and min speedup of %.3fx\n' % (label, mean_speedup, max_speedup, min_speedup,))
 
 def print_statistics(files, ordering):
     for file in files:

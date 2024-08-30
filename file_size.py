@@ -15,11 +15,11 @@ binsparse_csr_gzip9_noaux = read_dataset('binsparse_csr_gzip9_noaux.csv')
 mtx_noz_aux = read_dataset('mtx_noz_aux.csv')
 mtx_noz_noaux = read_dataset('mtx_noz_noaux.csv')
 
+fmm_noz = read_dataset('fmm_sizes.csv')
+
 matrix_nnz = read_nnz('matrix_nnzs.csv')
 
 cutoff = 1024*1024
-
-print(matrix_nnz)
 
 # Order by NNZ
 # ordering = [x[0] for x in sorted(matrix_nnz.items(), key=lambda x: x[1], reverse=True) if matrix_nnz[x[0]] >= cutoff]
@@ -27,8 +27,8 @@ print(matrix_nnz)
 # Order by MTX file size
 ordering = [x[0] for x in sorted(mtx_noz_noaux.items(), key=lambda x: x[1], reverse=True) if matrix_nnz[x[0]] >= cutoff]
 
-datasets = [mtx_noz_noaux, binsparse_coo_noz_noaux, binsparse_coo_gzip1_noaux, binsparse_csr_noz_noaux, binsparse_csr_gzip1_noaux]
-labels = ['mtx_noz_noaux', 'binsparse_coo_noz_noaux', 'binsparse_coo_gzip1_noaux', 'binsparse_csr_noz_noaux', 'binsparse_csr_gzip1_noaux']
+datasets = [mtx_noz_noaux, binsparse_coo_noz_noaux, binsparse_coo_gzip1_noaux, binsparse_csr_noz_noaux, binsparse_csr_gzip1_noaux, fmm_noz]
+labels = ['mtx_noz_noaux', 'binsparse_coo_noz_noaux', 'binsparse_coo_gzip1_noaux', 'binsparse_csr_noz_noaux', 'binsparse_csr_gzip1_noaux', 'fmm_noz']
 
 # datasets = [mtx_noz_noaux, binsparse_coo_noz_noaux, binsparse_coo_gzip1_noaux, binsparse_coo_gzip9_noaux]
 # labels = ['mtx_noz_noaux', 'binsparse_coo_noz_noaux', 'binsparse_coo_gzip1_noaux', 'binsparse_coo_gzip9_noaux']

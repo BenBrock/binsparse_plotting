@@ -43,7 +43,9 @@ ytick_labels = [pretty_print_time(time, True) for time in ytick_data]
 xtick_data = [x * 1024 * 1024 for x in [16, 64, 256, 1024, 4096, 16384, 65536]]
 xtick_labels = [pretty_print_size(x) for x in xtick_data]
 
-plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='Write Times (Cold) - SuiteSparse Matrix Collection', y_title='Runtime', x_title='Matrix Market File Size', yticks = (ytick_data, ytick_labels), xticks = (xtick_data, xtick_labels))
+colors = ['C0', 'C1', 'C3', 'C2', 'C4']
+
+plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='Write Times (Flushed)', y_title='Runtime', x_title='Matrix Market File Size', yticks = (ytick_data, ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.pdf')
 
 print_speedups(datasets, labels, ordering, mtx_coo_noz)
 
