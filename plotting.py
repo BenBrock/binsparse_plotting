@@ -21,6 +21,13 @@ relabel['binsparse_csr_gzip1'] = '.csr.bsp.gz'
 
 relabel['fmm_noz'] = '.fmm.mtx'
 
+relabel['mtx_mt'] = '.mtx MT'
+
+relabel['binsparse_coo_noz_mt'] = '.coo.bsp MT'
+relabel['binsparse_coo_gzip1_mt'] = '.coo.bsp.gz MT'
+relabel['binsparse_csr_noz_mt'] = '.csr.bsp MT'
+relabel['binsparse_csr_gzip1_mt'] = '.csr.bsp.gz MT'
+
 
 def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', title='', x_title='', y_title='', yticks=None, xticks=None, colors=None, style='scatter'):
     plt.style.use('tableau-colorblind10')
