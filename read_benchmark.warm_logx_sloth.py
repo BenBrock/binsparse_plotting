@@ -39,11 +39,14 @@ binsparse_csr_gzip1_mt = read_and_clean_benchmark_data('sloth/warm_read_mt/br_cs
 # Order by MTX read time
 ordering = [x[0] for x in sorted(mtx_coo_noz.items(), key=lambda x: x[1], reverse=True) if matrix_nnz[x[0]] >= cutoff]
 
-datasets = [mtx_coo_noz, binsparse_coo_noz, binsparse_coo_gzip1, binsparse_csr_noz, binsparse_csr_gzip1, mtx_mt, binsparse_coo_noz_mt, binsparse_coo_gzip1_mt, binsparse_csr_noz_mt, binsparse_csr_gzip1_mt]
-labels = ['mtx_noz_noaux', 'binsparse_coo_noz', 'binsparse_coo_gzip1', 'binsparse_csr_noz', 'binsparse_csr_gzip1', 'mtx_mt', 'binsparse_coo_noz_mt', 'binsparse_coo_gzip1_mt', 'binsparse_csr_noz_mt', 'binsparse_csr_gzip1_mt']
+datasets = [mtx_coo_noz, binsparse_coo_gzip1, binsparse_csr_gzip1, binsparse_coo_noz, binsparse_csr_noz, mtx_mt, binsparse_coo_gzip1_mt, binsparse_csr_gzip1_mt, binsparse_coo_noz_mt, binsparse_csr_noz_mt]
+labels = ['mtx_noz_noaux', 'binsparse_coo_gzip1', 'binsparse_csr_gzip1', 'binsparse_coo_noz', 'binsparse_csr_noz', 'mtx_mt', 'binsparse_coo_gzip1_mt', 'binsparse_csr_gzip1_mt', 'binsparse_coo_noz_mt', 'binsparse_csr_noz_mt']
 
-datasets = datasets[5:]
-labels = labels[5:]
+colors = ['C0', 'C3', 'C4', 'C1', 'C2', 'C5', 'C6', 'C7', 'C8', 'C9']
+
+datasets = datasets[:5]
+labels = labels[:5]
+colors = colors[:5]
 
 ytick_data = [0.006, 0.03, 0.18, 1, 6, 30, 180]
 ytick_data = [0.001, 0.01, 0.1, 1, 10, 100]
@@ -51,8 +54,6 @@ ytick_labels = [pretty_print_time(time, True) for time in ytick_data]
 
 xtick_data = [x * 1024 * 1024 for x in [16, 64, 256, 1024, 4096, 16384, 65536]]
 xtick_labels = [pretty_print_size(x) for x in xtick_data]
-
-colors = ['C0', 'C1', 'C3', 'C2', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
 
 plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='Read Times (Warm Cache)', y_title='Runtime', x_title='Matrix Market File Size', yticks = (ytick_data, ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.pdf')
 
