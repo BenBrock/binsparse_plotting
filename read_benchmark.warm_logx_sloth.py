@@ -12,6 +12,28 @@ matrix_nnz = read_nnz('matrix_nnzs.csv')
 
 cutoff = 1000000
 
+tensor_tns_sizes = read_dataset('tensor_tns_sizes.csv')
+tensor_labels = ['tensor_tns', 'tensor_coo_bsp_gz9', 'tensor_csf_bsp_gz9']
+
+tensor_coo_bsp_gz9 = read_and_clean_tensor_data('sloth/tensor/results_bsp', 'coo')
+tensor_csf_bsp_gz9 = read_and_clean_tensor_data('sloth/tensor/results_bsp', 'csf')
+splatt_tns = read_and_clean_tensor_data('sloth/tensor/results_splatt')
+
+tensor_datasets = [splatt_tns, tensor_coo_bsp_gz9, tensor_csf_bsp_gz9]
+
+tensor_ordering = [x[0] for x in sorted(tensor_tns_sizes.items(), key=lambda x: x[1]) if tensor_tns_sizes[x[0]] >= cutoff]
+
+# Only include tensors for which we have results in ordering.
+tensor_ordering = [x for x in tensor_ordering if x in splatt_tns and x in tensor_coo_bsp_gz9 and x in tensor_csf_bsp_gz9]
+
+print(tensor_coo_bsp_gz9)
+print(tensor_csf_bsp_gz9)
+print(splatt_tns)
+
+tensor_colors = ['C5', 'C8', 'C9']
+
+tensor_data = (tensor_tns_sizes, tensor_datasets, tensor_labels, tensor_ordering, tensor_colors)
+
 # Size of MatrixMarket File
 mtx_noz_noaux = read_dataset('mtx_noz_noaux.csv')
 
@@ -55,7 +77,7 @@ ytick_labels = [pretty_print_time(time, True) for time in ytick_data]
 xtick_data = [x * 1024 * 1024 for x in [16, 64, 256, 1024, 4096, 16384, 65536]]
 xtick_labels = [pretty_print_size(x) for x in xtick_data]
 
-plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='Read Times (Warm Cache)', y_title='Runtime', x_title='Matrix Market File Size', yticks = (ytick_data, ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.pdf')
+plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='Read Times (Warm Cache)', y_title='Runtime', x_title='Matrix Market File Size', yticks = (ytick_data, ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.pdf', tensor_data=tensor_data)
 
 print_speedups(datasets, labels, ordering, mtx_coo_noz)
 

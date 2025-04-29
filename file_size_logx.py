@@ -33,7 +33,7 @@ tensor_ordering = [x[0] for x in sorted(tensor_tns_sizes.items(), key=lambda x: 
 # Only include tensors for which we have results in ordering.
 tensor_ordering = [x for x in tensor_ordering if x in tensor_coo_bsp_gz9_sizes and x in tensor_csf_bsp_gz9_sizes]
 
-tensor_colors = ['C5', 'C6', 'C7']
+tensor_colors = ['C5', 'C8', 'C9']
 
 tensor_data = (tensor_tns_sizes, tensor_datasets, tensor_labels, tensor_ordering, tensor_colors)
 

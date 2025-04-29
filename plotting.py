@@ -7,6 +7,9 @@ from statistics import geometric_mean
 
 from collections import defaultdict
 
+import os
+import json
+
 relabel = {}
 relabel['mtx_noz_noaux'] = '.mtx'
 relabel['binsparse_coo_noz_noaux'] = '.coo.bsp'
@@ -240,6 +243,28 @@ def read_benchmark_data(file_name):
 def read_and_clean_benchmark_data(file_name):
     matrix_data = read_benchmark_data(file_name)
     return {x: np.mean(matrix_data[x]['runtime']) for x in matrix_data.keys()};
+
+def read_and_clean_tensor_data(directory, prefix=None):
+    dataset = {}
+    for i in range(1, 30):
+        file_name = prefix + "_%s.json" % (i,) if prefix != None else "%s.json" % (i,)
+        file_name = directory + '/' + file_name
+        file_exists = os.path.exists(file_name) and os.path.isfile(file_name)
+
+        if file_exists:
+            try:
+                with open(file_name, "r") as f:
+                    data = json.load(f)
+
+                    runtime = np.mean(data['times'][10:])
+
+                    m = re.match('tensors/(.+?)\..+', data['filename'])
+                    label = m.group(1)
+
+                    dataset[label] = runtime
+            except:
+                pass
+    return dataset
 
 def print_speedups(datasets, labels, ordering, baseline):
     speedups = {}
