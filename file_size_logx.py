@@ -21,6 +21,22 @@ matrix_nnz = read_nnz('matrix_nnzs.csv')
 
 cutoff = 1024*1024
 
+tensor_tns_sizes = read_dataset('tensor_tns_sizes.csv')
+tensor_coo_bsp_gz9_sizes = read_dataset('tensor_coo_bsp_gz9_sizes.csv')
+tensor_csf_bsp_gz9_sizes = read_dataset('tensor_csf_bsp_gz9_sizes.csv')
+tensor_labels = ['tensor_tns', 'tensor_coo_bsp_gz9', 'tensor_csf_bsp_gz9']
+
+tensor_datasets = [tensor_tns_sizes, tensor_coo_bsp_gz9_sizes, tensor_csf_bsp_gz9_sizes]
+
+tensor_ordering = [x[0] for x in sorted(tensor_tns_sizes.items(), key=lambda x: x[1]) if tensor_tns_sizes[x[0]] >= cutoff]
+
+# Only include tensors for which we have results in ordering.
+tensor_ordering = [x for x in tensor_ordering if x in tensor_coo_bsp_gz9_sizes and x in tensor_csf_bsp_gz9_sizes]
+
+tensor_colors = ['C5', 'C6', 'C7']
+
+tensor_data = (tensor_tns_sizes, tensor_datasets, tensor_labels, tensor_ordering, tensor_colors)
+
 # Order by NNZ
 # ordering = [x[0] for x in sorted(matrix_nnz.items(), key=lambda x: x[1], reverse=True) if matrix_nnz[x[0]] >= cutoff]
 
@@ -46,7 +62,7 @@ xtick_labels = [pretty_print_size(x) for x in xtick_data]
 
 colors = ['C0', 'C1', 'C2', 'C3', 'C4']
 
-plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='File Size - SuiteSparse Matrix Collection', y_title='File Size (Bytes)', x_title='Matrix Market File Size', yticks = (ytick_data,ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.pdf')
+plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='File Size - SuiteSparse Matrix Collection', y_title='File Size (Bytes)', x_title='Matrix Market File Size', yticks = (ytick_data,ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.pdf', tensor_data=tensor_data)
 
 print(ytick_data)
 print(ytick_labels)

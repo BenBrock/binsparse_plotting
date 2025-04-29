@@ -28,8 +28,11 @@ relabel['binsparse_coo_gzip1_mt'] = '.coo.bsp.gz (P)'
 relabel['binsparse_csr_noz_mt'] = '.csr.bsp (P)'
 relabel['binsparse_csr_gzip1_mt'] = '.csr.bsp.gz (P)'
 
+relabel['tensor_tns'] = '.tns (T)'
+relabel['tensor_coo_bsp_gz9'] = '.coo.bsp.gz9 (T)'
+relabel['tensor_csf_bsp_gz9'] = '.csf.bsp.gz9 (T)'
 
-def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', title='', x_title='', y_title='', yticks=None, xticks=None, colors=None, style='scatter'):
+def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', title='', x_title='', y_title='', yticks=None, xticks=None, colors=None, style='scatter', tensor_data=None):
     plt.style.use('tableau-colorblind10')
     fix,ax = plt.subplots()
 
@@ -56,6 +59,27 @@ def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', t
         else:
             print('Style must be either line or scatter')
             assert(False)
+
+    if tensor_data != None:
+        (tensor_sizes,tensor_datasets,tensor_labels,tensor_ordering,tensor_colors) = tensor_data
+
+        tensor_domain_values = [tensor_sizes[tensor] for tensor in tensor_ordering]
+
+        tensor_markers = [None for d in tensor_datasets]
+
+        tensor_dataset_values = [[dataset[tensor] for tensor in tensor_ordering] for dataset in tensor_datasets]
+
+        for marker,dataset,label,color in zip(tensor_markers,tensor_dataset_values,tensor_labels,tensor_colors):
+            domain = tensor_domain_values
+            y_points = dataset
+
+            if style == 'line':
+                ax.semilogy(domain, y_points, label=relabel[label], color=color)
+            elif style == 'scatter':
+                ax.scatter(domain, y_points, label=relabel[label], s=2, color=color, alpha=0.9)
+            else:
+                print('Style must be either line or scatter')
+                assert(False)
 
     ax.minorticks_off()
 
