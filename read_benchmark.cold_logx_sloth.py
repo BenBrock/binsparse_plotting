@@ -60,3 +60,4 @@ plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='Read Times (Co
 print_speedups(datasets, labels, ordering, mtx_coo_noz)
 
 print_statistics(['sloth/cold_read/br_coo_gz1.out', 'sloth/cold_read/br_coo_noz.out', 'sloth/cold_read/br_csr_gz1.out', 'sloth/cold_read/br_csr_noz.out', 'sloth/cold_read/br_mtx_noz.2.out', 'sloth/cold_read/br_mtx_noz_multithreaded.out', 'sloth/cold_read_mt/br_coo_noz.out', 'sloth/cold_read_mt/br_coo_gz1.out', 'sloth/cold_read_mt/br_csr_noz.out', 'sloth/cold_read_mt/br_csr_gz1.out'], ordering)
+

@@ -32,6 +32,8 @@ relabel['binsparse_csr_noz_mt'] = '.csr.bsp (P)'
 relabel['binsparse_csr_gzip1_mt'] = '.csr.bsp.gz (P)'
 
 relabel['tensor_tns'] = '.tns (T)'
+relabel['tensor_coo_bsp_noz'] = '.coo.bsp (T)'
+relabel['tensor_csf_bsp_noz'] = '.csf.bsp (T)'
 relabel['tensor_coo_bsp_gz9'] = '.coo.bsp.gz9 (T)'
 relabel['tensor_csf_bsp_gz9'] = '.csf.bsp.gz9 (T)'
 
@@ -95,7 +97,7 @@ def plot_sizes_logx(matrix_sizes, datasets, labels, ordering, fname='out.png', t
         ax.set_xticks(xticks[0])
         ax.set_xticklabels(xticks[1])
 
-    plt.title(title, fontsize=18)
+    plt.title(title, fontsize=16)
     plt.xlabel(x_title, fontsize=12)
     plt.ylabel(y_title, fontsize=12)
     plt.rcParams.update({'font.size': 12})

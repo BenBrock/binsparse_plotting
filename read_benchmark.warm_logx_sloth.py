@@ -13,24 +13,39 @@ matrix_nnz = read_nnz('matrix_nnzs.csv')
 cutoff = 1000000
 
 tensor_tns_sizes = read_dataset('tensor_tns_sizes.csv')
-tensor_labels = ['tensor_tns', 'tensor_coo_bsp_gz9', 'tensor_csf_bsp_gz9']
+tensor_labels = ['tensor_tns', 'tensor_coo_bsp_noz', 'tensor_csf_bsp_noz']
 
-tensor_coo_bsp_gz9 = read_and_clean_tensor_data('sloth/tensor/results_bsp', 'coo')
-tensor_csf_bsp_gz9 = read_and_clean_tensor_data('sloth/tensor/results_bsp', 'csf')
+tensor_coo_bsp_gz9 = read_and_clean_tensor_data('sloth/tensor/gz9/results_bsp', 'coo')
+tensor_csf_bsp_gz9 = read_and_clean_tensor_data('sloth/tensor/gz9/results_bsp', 'csf')
+
+tensor_coo_bsp_gz1 = read_and_clean_tensor_data('sloth/tensor/gz1/results_bsp', 'coo')
+tensor_csf_bsp_gz1 = read_and_clean_tensor_data('sloth/tensor/gz1/results_bsp', 'csf')
+
+tensor_coo_bsp_noz = read_and_clean_tensor_data('sloth/tensor/noz/results_bsp', 'coo')
+tensor_csf_bsp_noz = read_and_clean_tensor_data('sloth/tensor/noz/results_bsp', 'csf')
+
 splatt_tns = read_and_clean_tensor_data('sloth/tensor/results_splatt')
 
-tensor_datasets = [splatt_tns, tensor_coo_bsp_gz9, tensor_csf_bsp_gz9]
+tensor_datasets = [splatt_tns, tensor_coo_bsp_noz, tensor_csf_bsp_noz]
 
 tensor_ordering = [x[0] for x in sorted(tensor_tns_sizes.items(), key=lambda x: x[1]) if tensor_tns_sizes[x[0]] >= cutoff]
 
 # Only include tensors for which we have results in ordering.
-tensor_ordering = [x for x in tensor_ordering if x in splatt_tns and x in tensor_coo_bsp_gz9 and x in tensor_csf_bsp_gz9]
-
-print(tensor_coo_bsp_gz9)
-print(tensor_csf_bsp_gz9)
-print(splatt_tns)
+tensor_ordering = [x for x in tensor_ordering if x in splatt_tns and x in tensor_coo_bsp_noz and x in tensor_csf_bsp_noz]
 
 tensor_colors = ['C5', 'C8', 'C9']
+
+for tensor in open('tensor_names.txt', 'r').readlines():
+    tensor = tensor.strip()
+    print('%s:' % (tensor,))
+    if tensor not in splatt_tns:
+        print('  splatt_tns mission')
+
+    if tensor not in tensor_coo_bsp_gz9:
+        print('  coo mission')
+
+    if tensor not in tensor_csf_bsp_gz9:
+        print('  csf mission')
 
 tensor_data = (tensor_tns_sizes, tensor_datasets, tensor_labels, tensor_ordering, tensor_colors)
 

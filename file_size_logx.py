@@ -24,9 +24,15 @@ cutoff = 1024*1024
 tensor_tns_sizes = read_dataset('tensor_tns_sizes.csv')
 tensor_coo_bsp_gz9_sizes = read_dataset('tensor_coo_bsp_gz9_sizes.csv')
 tensor_csf_bsp_gz9_sizes = read_dataset('tensor_csf_bsp_gz9_sizes.csv')
-tensor_labels = ['tensor_tns', 'tensor_coo_bsp_gz9', 'tensor_csf_bsp_gz9']
 
-tensor_datasets = [tensor_tns_sizes, tensor_coo_bsp_gz9_sizes, tensor_csf_bsp_gz9_sizes]
+tensor_coo_bsp_gz1_sizes = read_dataset('tensor_coo_bsp_gz1_sizes.csv')
+tensor_csf_bsp_gz1_sizes = read_dataset('tensor_csf_bsp_gz1_sizes.csv')
+
+tensor_coo_bsp_noz_sizes = read_dataset('tensor_coo_bsp_noz_sizes.csv')
+tensor_csf_bsp_noz_sizes = read_dataset('tensor_csf_bsp_noz_sizes.csv')
+
+tensor_labels = ['tensor_tns', 'tensor_coo_bsp_noz', 'tensor_csf_bsp_noz']
+tensor_datasets = [tensor_tns_sizes, tensor_coo_bsp_noz_sizes, tensor_csf_bsp_noz_sizes]
 
 tensor_ordering = [x[0] for x in sorted(tensor_tns_sizes.items(), key=lambda x: x[1]) if tensor_tns_sizes[x[0]] >= cutoff]
 
@@ -62,7 +68,7 @@ xtick_labels = [pretty_print_size(x) for x in xtick_data]
 
 colors = ['C0', 'C1', 'C2', 'C3', 'C4']
 
-plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='File Size - SuiteSparse Matrix Collection', y_title='File Size (Bytes)', x_title='Matrix Market File Size', yticks = (ytick_data,ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.pdf', tensor_data=tensor_data)
+plot_sizes_logx(mtx_noz_noaux, datasets, labels, ordering, title='File Size, SuiteSparse and FROSTT Collections', y_title='File Size (Bytes)', x_title='.mtx or .tns File Size', yticks = (ytick_data,ytick_labels), xticks = (xtick_data, xtick_labels), colors=colors, fname='out.pdf', tensor_data=tensor_data)
 
 print(ytick_data)
 print(ytick_labels)
